@@ -22,7 +22,7 @@ import java.util.UUID;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity
 @Table(name = "TB_COURSES")
-public class CourseModel  implements Serializable {
+public class CourseModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -63,14 +63,11 @@ public class CourseModel  implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     private Set<ModuleModel> modules;
 
-
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
-    private Set<CourseUserModel> coursesUsers;
-
-
-    public CourseUserModel convertToCourseUserModel(UUID userId){
-        return new CourseUserModel(null, userId,this );
-    }
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "TB_COURSES_USERS",
+                joinColumns = @JoinColumn(name = "course_id"),
+                inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<UserModel> users;
 
 }
